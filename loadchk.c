@@ -1,3 +1,47 @@
+/**
+ * Load average checker for Linux.
+ * (c) 2010, Nicholas Booker
+ *
+ * OUTPUT
+ *
+ * This program checks the load average for the system.
+ * If it is < 1, then this program exits silently without producing any output.
+ * If it is >= 1, then this program will:
+ *  * print the current one-minute load average
+ *  * print a list of most hungry processes at the moment
+ *
+ * The silence when less than one is a design feature, allowing this program
+ * to run as a cron job and produce a report email only if the load is
+ * worth reporting.
+ *
+ * EXIT STATUS
+ * 
+ * 0   -- Ran successfully (regardless of system load)
+ * >0  -- We couldn't get the load average, or something else failed.
+ *
+ * Note at the moment we treat errors running top as inconveniences rather
+ * than errors.  You'll be warned of the failure but the program will still
+ * exit with status 0 if that's all that failed.
+ *
+ * This may change soon.
+ *
+ * FUTURE CHANGES
+ *
+ * * -t option to override the default load average threshold of 1.0
+ * * Return a non-zero exit status if the load average > threshold
+ * * Remove call to 'top'.  This should be done by calling script based on
+ *   the exit status.
+ * * -q option for quiet output.
+ *
+ * SUPER-FUTURE CHANGES
+ * * allow comparisons (implying -q), e.g.
+ *    chkload -g 1
+ *    chkload -ge 1
+ *    chkload -l 1 (same as -t 1 -q)
+ *    chkload -le 1
+ *   I wont include equal or not equal, because they don't make sense.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
