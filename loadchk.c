@@ -99,4 +99,5 @@ int main(int argc, char** argv)
         printf("Current load average %0.02f exceeds %d\n", loadavg[0], num_cpus());
         (void) show_top();
     }
+    return 0;
 }
