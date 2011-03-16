@@ -45,11 +45,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-int num_cpus(void)
-{
-    return 1;
-}
+#include <libgen.h>
 
 /* Show 20 lines of top output */
 int show_top(void)
@@ -82,11 +78,34 @@ int show_top(void)
     }
 }
 
+void print_usage(char *argv0)
+{
+    fprintf(stderr, "USAGE: %s [-t threshold]\n", basename(argv0));
+}
+
 int main(int argc, char** argv)
 {
     int num_samples;   /* Number of load average samples retrieved */
     double loadavg[3]; /* Space for up to 3 load average samples */
     char* fmt;
+    double threshold;
+    char flag;
+    char *p;    /* For the call to strtod */
+
+    threshold = 1.0;
+
+    while ((flag = getopt(argc, argv, "t:")) != -1) {
+        switch (flag) {
+            case 't':
+                threshold = strtod(optarg, &p); break;
+            case '?':
+                print_usage(argv[0]);
+                return 1;
+            default:
+                print_usage(argv[0]);
+                abort();
+        }
+    }
 
     num_samples = getloadavg(loadavg, 3);
 
@@ -95,8 +114,8 @@ int main(int argc, char** argv)
         return 2;
     }
 
-    if (loadavg[0] > (double) num_cpus()) {
-        printf("Current load average %0.02f exceeds %d\n", loadavg[0], num_cpus());
+    if (loadavg[0] > threshold) {
+        printf("Current load average %0.02f exceeds %0.02f\n", loadavg[0], threshold);
         (void) show_top();
     }
     return 0;
