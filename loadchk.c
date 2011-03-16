@@ -25,12 +25,15 @@
  *
  * This may change soon.
  *
+ * OPTIONS
+ *
+ * the -t option overrides the default load average threshold of 1.0
+ * e.g.:
+ *   loadavg -t 2.2
+ *
  * FUTURE CHANGES
  *
- * * -t option to override the default load average threshold of 1.0
- * * Return a non-zero exit status if the load average > threshold
- * * Remove call to 'top'.  This should be done by calling script based on
- *   the exit status.
+ * * Don't call 'top' -- leave that to calling scripts.
  * * -q option for quiet output.
  *
  * SUPER-FUTURE CHANGES
